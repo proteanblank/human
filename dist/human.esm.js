@@ -94,7 +94,7 @@ var config = {
   cacheModels: true,
   wasmPath: "",
   wasmPlatformFetch: false,
-  debug: true,
+  debug: false,
   async: true,
   warmup: "full",
   cacheSensitivity: 0.7,
@@ -39159,7 +39159,8 @@ var env = new Env();
 
 // src/tfjs/load.ts
 var options = {
-  cacheModels: false,
+  cacheModels: true,
+  cacheSupported: true,
   verbose: true,
   debug: false,
   modelBasePath: ""
@@ -39189,8 +39190,9 @@ async function loadModel(modelPath) {
     weights: 0,
     cached: false
   };
-  const cachedModels = await An.listModels();
-  modelStats[shortModelName].cached = options.cacheModels && Object.keys(cachedModels).includes(cachedModelName);
+  options.cacheSupported = typeof window !== "undefined" && typeof window.localStorage !== "undefined" && typeof window.indexedDB !== "undefined";
+  const cachedModels = options.cacheSupported && options.cacheModels ? await An.listModels() : {};
+  modelStats[shortModelName].cached = options.cacheSupported && options.cacheModels && Object.keys(cachedModels).includes(cachedModelName);
   const tfLoadOptions = typeof fetch === "undefined" ? {} : { fetchFunc: (url, init2) => httpHandler(url, init2) };
   const model18 = new P0(modelStats[shortModelName].cached ? cachedModelName : modelUrl, tfLoadOptions);
   let loaded = false;
@@ -39203,12 +39205,12 @@ async function loadModel(modelPath) {
     model18.loadSync(artifacts);
     modelStats[shortModelName].weights = ((_c = (_b2 = model18 == null ? void 0 : model18.artifacts) == null ? void 0 : _b2.weightData) == null ? void 0 : _c.byteLength) || 0;
     if (options.verbose)
-      log("load model:", model18["modelUrl"], { bytes: modelStats[shortModelName].weights });
+      log("load model:", model18["modelUrl"], { bytes: modelStats[shortModelName].weights }, options);
     loaded = true;
   } catch (err) {
     log("error loading model:", modelUrl, err);
   }
-  if (loaded && options.cacheModels && !modelStats[shortModelName].cached) {
+  if (loaded && options.cacheModels && options.cacheSupported && !modelStats[shortModelName].cached) {
     try {
       const saveResult = await model18.save(cachedModelName);
       log("model saved:", cachedModelName, saveResult);
@@ -39241,10 +39243,11 @@ var lastCount = 0;
 var lastTime = 0;
 var skipped = Number.MAX_SAFE_INTEGER;
 async function load(config3) {
+  var _a2;
   if (env.initial)
     model = null;
   if (!model)
-    model = await loadModel(config3.face["gear"]);
+    model = await loadModel((_a2 = config3.face["gear"]) == null ? void 0 : _a2.modelPath);
   else if (config3.debug)
     log("cached model:", model["modelUrl"]);
   return model;

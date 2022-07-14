@@ -39394,7 +39394,12 @@ async function loadModel(modelPath) {
     cached: false
   };
   options.cacheSupported = typeof window !== "undefined" && typeof window.localStorage !== "undefined" && typeof window.indexedDB !== "undefined";
-  const cachedModels = options.cacheSupported && options.cacheModels ? await fs.listModels() : {};
+  let cachedModels = {};
+  try {
+    cachedModels = options.cacheSupported && options.cacheModels ? await fs.listModels() : {};
+  } catch (e) {
+    options.cacheSupported = false;
+  }
   modelStats[shortModelName].cached = options.cacheSupported && options.cacheModels && Object.keys(cachedModels).includes(cachedModelName);
   const tfLoadOptions = typeof fetch === "undefined" ? {} : { fetchFunc: (url, init2) => httpHandler(url, init2) };
   const model18 = new l1(modelStats[shortModelName].cached ? cachedModelName : modelUrl, tfLoadOptions);

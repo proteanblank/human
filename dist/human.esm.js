@@ -49527,13 +49527,13 @@ var Models = class {
   }
 };
 var getModelStats = () => {
-  let sizeManifest = 0;
+  let sizeFromManifest = 0;
   let sizeWeights = 0;
   for (const m of Object.values(modelStats)) {
-    sizeManifest += m.manifest;
+    sizeFromManifest += m.manifest;
     sizeWeights += m.weights;
   }
-  return { sizeManifest, sizeWeights, numModels: Object.values(modelStats).length };
+  return { numLoadedModels: Object.values(modelStats).length, sizeFromManifest, sizeWeights };
 };
 function reset(instance) {
   for (const model18 of Object.keys(instance.models))
@@ -52017,7 +52017,6 @@ var Human = class {
       if (this.events && this.events.dispatchEvent)
         (_a2 = this.events) == null ? void 0 : _a2.dispatchEvent(new Event(event));
     });
-    __publicField(this, "getModelStats", () => getModelStats());
     var _a2;
     this.env = env;
     const tfVersion = (((_a2 = bfe) == null ? void 0 : _a2.tfjs) || jhe).replace(/-(.*)/, "");
@@ -52123,6 +52122,9 @@ var Human = class {
   }
   next(result = this.result) {
     return calc2(result, this.config);
+  }
+  getModelStats() {
+    return getModelStats();
   }
   async warmup(userConfig) {
     const t02 = now();

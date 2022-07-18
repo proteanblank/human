@@ -73639,6 +73639,140 @@ var Env = class {
 };
 var env2 = new Env();
 
+// models/models.json
+var models_exports = {};
+__export(models_exports, {
+  age: () => age,
+  antispoof: () => antispoof,
+  blazeface: () => blazeface,
+  "blazeface-back": () => blazeface_back,
+  "blazeface-front": () => blazeface_front,
+  "blazepose-detector2d": () => blazepose_detector2d,
+  "blazepose-detector3d": () => blazepose_detector3d,
+  "blazepose-full": () => blazepose_full,
+  "blazepose-heavy": () => blazepose_heavy,
+  "blazepose-lite": () => blazepose_lite,
+  default: () => models_default,
+  efficientpose: () => efficientpose,
+  emotion: () => emotion,
+  faceboxes: () => faceboxes,
+  facemesh: () => facemesh,
+  "facemesh-attention": () => facemesh_attention,
+  "facemesh-attention-alt": () => facemesh_attention_alt,
+  "facemesh-detection-full": () => facemesh_detection_full,
+  "facemesh-detection-short": () => facemesh_detection_short,
+  "facemesh-orig": () => facemesh_orig,
+  faceres: () => faceres,
+  "faceres-deep": () => faceres_deep,
+  gear: () => gear,
+  gender: () => gender,
+  "gender-ssrnet-imdb": () => gender_ssrnet_imdb,
+  handdetect: () => handdetect,
+  "handlandmark-full": () => handlandmark_full,
+  "handlandmark-lite": () => handlandmark_lite,
+  "handlandmark-sparse": () => handlandmark_sparse,
+  handskeleton: () => handskeleton,
+  handtrack: () => handtrack,
+  iris: () => iris,
+  liveness: () => liveness,
+  "mb3-centernet": () => mb3_centernet,
+  meet: () => meet,
+  mobileface: () => mobileface,
+  mobilefacenet: () => mobilefacenet,
+  "movenet-lightning": () => movenet_lightning,
+  "movenet-multipose": () => movenet_multipose,
+  "movenet-thunder": () => movenet_thunder,
+  nanodet: () => nanodet,
+  posenet: () => posenet,
+  selfie: () => selfie
+});
+var age = 161240;
+var antispoof = 853098;
+var blazeface_back = 538928;
+var blazeface_front = 402048;
+var blazeface = 538928;
+var blazepose_detector2d = 7499400;
+var blazepose_detector3d = 5928856;
+var blazepose_full = 6338290;
+var blazepose_heavy = 27501554;
+var blazepose_lite = 2725490;
+var efficientpose = 5651240;
+var emotion = 820516;
+var faceboxes = 2013002;
+var facemesh_attention_alt = 2387598;
+var facemesh_attention = 2382414;
+var facemesh_detection_full = 1026192;
+var facemesh_detection_short = 201268;
+var facemesh_orig = 2955780;
+var facemesh = 1477958;
+var faceres_deep = 13957620;
+var faceres = 6978814;
+var gear = 1498916;
+var gender_ssrnet_imdb = 161236;
+var gender = 201808;
+var handdetect = 3515612;
+var handlandmark_full = 5431368;
+var handlandmark_lite = 2023432;
+var handlandmark_sparse = 5286322;
+var handskeleton = 5502280;
+var handtrack = 2964837;
+var iris = 2599092;
+var liveness = 592976;
+var mb3_centernet = 4030290;
+var meet = 372228;
+var mobileface = 2183192;
+var mobilefacenet = 5171976;
+var movenet_lightning = 4650216;
+var movenet_multipose = 9448838;
+var movenet_thunder = 12477112;
+var nanodet = 7574558;
+var posenet = 5032780;
+var selfie = 212886;
+var models_default = {
+  age,
+  antispoof,
+  "blazeface-back": blazeface_back,
+  "blazeface-front": blazeface_front,
+  blazeface,
+  "blazepose-detector2d": blazepose_detector2d,
+  "blazepose-detector3d": blazepose_detector3d,
+  "blazepose-full": blazepose_full,
+  "blazepose-heavy": blazepose_heavy,
+  "blazepose-lite": blazepose_lite,
+  efficientpose,
+  emotion,
+  faceboxes,
+  "facemesh-attention-alt": facemesh_attention_alt,
+  "facemesh-attention": facemesh_attention,
+  "facemesh-detection-full": facemesh_detection_full,
+  "facemesh-detection-short": facemesh_detection_short,
+  "facemesh-orig": facemesh_orig,
+  facemesh,
+  "faceres-deep": faceres_deep,
+  faceres,
+  gear,
+  "gender-ssrnet-imdb": gender_ssrnet_imdb,
+  gender,
+  handdetect,
+  "handlandmark-full": handlandmark_full,
+  "handlandmark-lite": handlandmark_lite,
+  "handlandmark-sparse": handlandmark_sparse,
+  handskeleton,
+  handtrack,
+  iris,
+  liveness,
+  "mb3-centernet": mb3_centernet,
+  meet,
+  mobileface,
+  mobilefacenet,
+  "movenet-lightning": movenet_lightning,
+  "movenet-multipose": movenet_multipose,
+  "movenet-thunder": movenet_thunder,
+  nanodet,
+  posenet,
+  selfie
+};
+
 // src/tfjs/load.ts
 var options = {
   cacheModels: true,
@@ -73663,14 +73797,15 @@ async function loadModel(modelPath) {
   let modelUrl = join(options.modelBasePath, modelPath || "");
   if (!modelUrl.toLowerCase().endsWith(".json"))
     modelUrl += ".json";
-  const modelPathSegments = modelUrl.split("/");
+  const modelPathSegments = modelUrl.includes("/") ? modelUrl.split("/") : modelUrl.split("\\");
   const shortModelName = modelPathSegments[modelPathSegments.length - 1].replace(".json", "");
   const cachedModelName = "indexeddb://" + shortModelName;
   modelStats[shortModelName] = {
     name: shortModelName,
-    manifest: 0,
-    weights: 0,
-    cached: false
+    sizeFromManifest: 0,
+    sizeLoadedWeights: 0,
+    sizeDesired: models_exports[shortModelName],
+    inCache: false
   };
   options.cacheSupported = typeof window !== "undefined" && typeof window.localStorage !== "undefined" && typeof window.indexedDB !== "undefined";
   let cachedModels = {};
@@ -73679,25 +73814,25 @@ async function loadModel(modelPath) {
   } catch (e2) {
     options.cacheSupported = false;
   }
-  modelStats[shortModelName].cached = options.cacheSupported && options.cacheModels && Object.keys(cachedModels).includes(cachedModelName);
+  modelStats[shortModelName].inCache = options.cacheSupported && options.cacheModels && Object.keys(cachedModels).includes(cachedModelName);
   const tfLoadOptions = typeof fetch === "undefined" ? {} : { fetchFunc: (url, init3) => httpHandler(url, init3) };
-  const model19 = new GraphModel(modelStats[shortModelName].cached ? cachedModelName : modelUrl, tfLoadOptions);
+  const model19 = new GraphModel(modelStats[shortModelName].inCache ? cachedModelName : modelUrl, tfLoadOptions);
   let loaded = false;
   try {
     model19.findIOHandler();
     if (options.debug)
       log("model load handler:", model19["handler"]);
     const artifacts = await model19.handler.load();
-    modelStats[shortModelName].manifest = ((_a = artifacts == null ? void 0 : artifacts.weightData) == null ? void 0 : _a.byteLength) || 0;
+    modelStats[shortModelName].sizeFromManifest = ((_a = artifacts == null ? void 0 : artifacts.weightData) == null ? void 0 : _a.byteLength) || 0;
     model19.loadSync(artifacts);
-    modelStats[shortModelName].weights = ((_c = (_b = model19 == null ? void 0 : model19.artifacts) == null ? void 0 : _b.weightData) == null ? void 0 : _c.byteLength) || 0;
+    modelStats[shortModelName].sizeLoadedWeights = ((_c = (_b = model19 == null ? void 0 : model19.artifacts) == null ? void 0 : _b.weightData) == null ? void 0 : _c.byteLength) || 0;
     if (options.verbose)
-      log("load model:", model19["modelUrl"], { bytes: modelStats[shortModelName].weights }, options);
+      log("load model:", model19["modelUrl"], { bytes: modelStats[shortModelName].sizeLoadedWeights }, options);
     loaded = true;
   } catch (err) {
     log("error loading model:", modelUrl, err);
   }
-  if (loaded && options.cacheModels && options.cacheSupported && !modelStats[shortModelName].cached) {
+  if (loaded && options.cacheModels && options.cacheSupported && !modelStats[shortModelName].inCache) {
     try {
       const saveResult = await model19.save(cachedModelName);
       log("model saved:", cachedModelName, saveResult);
@@ -73709,11 +73844,11 @@ async function loadModel(modelPath) {
 }
 
 // package.json
-var version5 = "2.8.1";
+var version5 = "2.9.0";
 
 // src/models.ts
-var models_exports = {};
-__export(models_exports, {
+var models_exports2 = {};
+__export(models_exports2, {
   Models: () => Models,
   getModelStats: () => getModelStats,
   load: () => load19,
@@ -73760,9 +73895,9 @@ async function predict(image2, config3, idx, count3) {
     const obj = { age: 0, gender: "unknown", genderScore: 0, race: [] };
     if ((_a2 = config3.face["gear"]) == null ? void 0 : _a2.enabled)
       [t2.age, t2.gender, t2.race] = model2.execute(t2.resize, ["age_output", "gender_output", "race_output"]);
-    const gender = await t2.gender.data();
-    obj.gender = gender[0] > gender[1] ? "male" : "female";
-    obj.genderScore = Math.round(100 * (gender[0] > gender[1] ? gender[0] : gender[1])) / 100;
+    const gender2 = await t2.gender.data();
+    obj.gender = gender2[0] > gender2[1] ? "male" : "female";
+    obj.genderScore = Math.round(100 * (gender2[0] > gender2[1] ? gender2[0] : gender2[1])) / 100;
     const race = await t2.race.data();
     for (let i2 = 0; i2 < race.length; i2++) {
       if (race[i2] > (((_b2 = config3.face["gear"]) == null ? void 0 : _b2.minConfidence) || 0.2))
@@ -73771,10 +73906,10 @@ async function predict(image2, config3, idx, count3) {
     obj.race.sort((a6, b) => b.score - a6.score);
     const ageDistribution = Array.from(await t2.age.data());
     const ageSorted = ageDistribution.map((a6, i2) => [ageWeights[i2], a6]).sort((a6, b) => b[1] - a6[1]);
-    let age = ageSorted[0][0];
+    let age2 = ageSorted[0][0];
     for (let i2 = 1; i2 < ageSorted.length; i2++)
-      age += ageSorted[i2][1] * (ageSorted[i2][0] - age);
-    obj.age = Math.round(10 * age) / 10;
+      age2 += ageSorted[i2][1] * (ageSorted[i2][0] - age2);
+    obj.age = Math.round(10 * age2) / 10;
     Object.keys(t2).forEach((tensor2) => dispose(t2[tensor2]));
     last2[idx] = obj;
     lastCount = count3;
@@ -78956,18 +79091,18 @@ async function predict11(image2, config3, idx, count3) {
       lastTime10 = now();
       dispose(enhanced);
       const genderT = await resT.find((t2) => t2.shape[1] === 1);
-      const gender = await genderT.data();
-      const confidence = Math.trunc(200 * Math.abs(gender[0] - 0.5)) / 100;
+      const gender2 = await genderT.data();
+      const confidence = Math.trunc(200 * Math.abs(gender2[0] - 0.5)) / 100;
       if (confidence > (((_b2 = config3.face.description) == null ? void 0 : _b2.minConfidence) || 0)) {
-        obj.gender = gender[0] <= 0.5 ? "female" : "male";
+        obj.gender = gender2[0] <= 0.5 ? "female" : "male";
         obj.genderScore = Math.min(0.99, confidence);
       }
       const argmax2 = argMax(resT.find((t2) => t2.shape[1] === 100), 1);
-      const age = (await argmax2.data())[0];
+      const age2 = (await argmax2.data())[0];
       dispose(argmax2);
       const ageT = resT.find((t2) => t2.shape[1] === 100);
       const all6 = await ageT.data();
-      obj.age = Math.round(all6[age - 1] > all6[age + 1] ? 10 * age - 100 * all6[age - 1] : 10 * age + 100 * all6[age + 1]) / 10;
+      obj.age = Math.round(all6[age2 - 1] > all6[age2 + 1] ? 10 * age2 - 100 * all6[age2 - 1] : 10 * age2 + 100 * all6[age2 + 1]) / 10;
       const desc = resT.find((t2) => t2.shape[1] === 1024);
       const descriptor = desc ? await desc.data() : [];
       obj.descriptor = Array.from(descriptor);
@@ -83805,14 +83940,25 @@ var Models = class {
     __publicField(this, "antispoof", null);
   }
 };
-var getModelStats = () => {
-  let sizeFromManifest = 0;
-  let sizeWeights = 0;
+var getModelStats = (instance) => {
+  let totalSizeFromManifest = 0;
+  let totalSizeWeights = 0;
+  let totalSizeLoading = 0;
   for (const m of Object.values(modelStats)) {
-    sizeFromManifest += m.manifest;
-    sizeWeights += m.weights;
+    totalSizeFromManifest += m.sizeFromManifest;
+    totalSizeWeights += m.sizeLoadedWeights;
+    totalSizeLoading += m.sizeDesired;
   }
-  return { numLoadedModels: Object.values(modelStats).length, sizeFromManifest, sizeWeights };
+  return {
+    numLoadedModels: Object.values(modelStats).length,
+    numEnabledModels: void 0,
+    numDefinedModels: Object.keys(instance.models).length,
+    totalSizeFromManifest,
+    totalSizeWeights,
+    totalSizeLoading,
+    totalSizeEnabled: void 0,
+    modelStats: Object.values(modelStats)
+  };
 };
 function reset(instance) {
   for (const model19 of Object.keys(instance.models))
@@ -84315,10 +84461,10 @@ function drawLabels(f, ctx) {
     if (f.live)
       labels2.push(`live: ${Math.trunc(100 * f.live)}%`);
     if (f.emotion && f.emotion.length > 0) {
-      const emotion = f.emotion.map((a6) => `${Math.trunc(100 * a6.score)}% ${a6.emotion}`);
-      if (emotion.length > 3)
-        emotion.length = 3;
-      labels2.push(emotion.join(" "));
+      const emotion2 = f.emotion.map((a6) => `${Math.trunc(100 * a6.score)}% ${a6.emotion}`);
+      if (emotion2.length > 3)
+        emotion2.length = 3;
+      labels2.push(emotion2.join(" "));
     }
     if (f.rotation && f.rotation.angle && f.rotation.gaze) {
       if (f.rotation.angle.roll)
@@ -85060,7 +85206,7 @@ var face2 = (res) => {
   }
   return gestures;
 };
-var iris = (res) => {
+var iris2 = (res) => {
   if (!res)
     return [];
   const gestures = [];
@@ -86403,7 +86549,7 @@ var Human = class {
     return calc2(result, this.config);
   }
   getModelStats() {
-    return getModelStats();
+    return getModelStats(this);
   }
   async warmup(userConfig) {
     const t0 = now();
@@ -86559,7 +86705,7 @@ var Human = class {
       let gestureRes = [];
       if (this.config.gesture.enabled) {
         timeStamp = now();
-        gestureRes = [...face2(faceRes), ...body2(bodyRes), ...hand2(handRes), ...iris(faceRes)];
+        gestureRes = [...face2(faceRes), ...body2(bodyRes), ...hand2(handRes), ...iris2(faceRes)];
         if (!this.config.async)
           this.performance.gesture = this.env.perfadd ? (this.performance.gesture || 0) + Math.trunc(now() - timeStamp) : Math.trunc(now() - timeStamp);
         else if (this.performance.gesture)
@@ -86599,7 +86745,7 @@ export {
   draw_exports as draw,
   env2 as env,
   match_exports as match,
-  models_exports as models
+  models_exports2 as models
 };
 /**
  * @license
